@@ -120,7 +120,7 @@ class WFS_Renewals {
 		$order->update_meta_data( '_wfs_subscription_id', $subscription_id );
 		$order->update_meta_data( '_wfs_is_renewal', 1 );
 		$order->calculate_totals();
-		$order->update_status( 'pending', __( 'Subscription renewal awaiting customer payment.', 'subscribely-recurring-billing' ) );
+		$order->update_status( 'pending', __( 'Subscription renewal awaiting customer payment.', 'subscribely-recurring-billing-for-woocommerce' ) );
 		$order->save();
 
 		update_post_meta( $subscription_id, '_wfs_pending_order_id', $order->get_id() );
@@ -158,13 +158,13 @@ class WFS_Renewals {
 
 		if ( $count >= $max ) {
 			WFS_Subscription::set_status( $subscription_id, 'on-hold', 'retry-exhausted' );
-			$order->add_order_note( __( 'Final subscription renewal reminder sent; subscription placed on hold.', 'subscribely-recurring-billing' ) );
+			$order->add_order_note( __( 'Final subscription renewal reminder sent; subscription placed on hold.', 'subscribely-recurring-billing-for-woocommerce' ) );
 		} else {
 			WFS_Subscription::set_status( $subscription_id, 'past-due', 'payment-retry' );
 			$order->add_order_note(
 				sprintf(
 					/* translators: 1: attempt number, 2: maximum attempts. */
-					__( 'Subscription renewal reminder %1$d of %2$d sent.', 'subscribely-recurring-billing' ),
+					__( 'Subscription renewal reminder %1$d of %2$d sent.', 'subscribely-recurring-billing-for-woocommerce' ),
 					$count,
 					$max
 				)

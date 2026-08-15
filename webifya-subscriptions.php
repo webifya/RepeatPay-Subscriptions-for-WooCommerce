@@ -3,12 +3,15 @@
  * Plugin Name: Subscribely – Recurring Billing for WooCommerce
  * Plugin URI: https://www.webninjallc.com/plugins/subscribely/
  * Description: Create flexible WooCommerce subscriptions with renewal scheduling, payment recovery, trials, sign-up fees, and gateway-neutral invoices.
- * Version: 0.5.5
+ * Version: 0.5.8
  * Author: Mahfuzar Rahman
- * Author URI: https://github.com/webifya
- * Text Domain: subscribely-recurring-billing
+ * Author URI: https://profiles.wordpress.org/mahfuzar/
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: subscribely-recurring-billing-for-woocommerce
  * Requires at least: 6.4
  * Requires PHP: 7.4
+ * Requires Plugins: woocommerce
  * WC requires at least: 8.5
  * WC tested up to: 9.9
  *
@@ -23,14 +26,14 @@ if ( defined( 'WFS_PLUGIN_FILE' ) ) {
 		'admin_notices',
 		static function () {
 			echo '<div class="notice notice-error"><p>';
-			echo esc_html__( 'More than one copy of Subscribely is installed and active. Keep only Subscribely – Recurring Billing for WooCommerce active, then delete the older My Subscriptions copy.', 'subscribely-recurring-billing' );
+			echo esc_html__( 'More than one copy of Subscribely is installed and active. Keep only Subscribely – Recurring Billing for WooCommerce active, then delete the older My Subscriptions copy.', 'subscribely-recurring-billing-for-woocommerce' );
 			echo '</p></div>';
 		}
 	);
 	return;
 }
 
-define( 'WFS_VERSION', '0.5.5' );
+define( 'WFS_VERSION', '0.5.8' );
 define( 'WFS_PLUGIN_FILE', __FILE__ );
 define( 'WFS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 

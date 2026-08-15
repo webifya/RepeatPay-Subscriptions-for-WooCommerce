@@ -65,8 +65,8 @@ class WFS_Subscription {
 			self::POST_TYPE,
 			array(
 				'labels' => array(
-					'name'          => __( 'Subscriptions', 'subscribely-recurring-billing' ),
-					'singular_name' => __( 'Subscription', 'subscribely-recurring-billing' ),
+					'name'          => __( 'Subscriptions', 'subscribely-recurring-billing-for-woocommerce' ),
+					'singular_name' => __( 'Subscription', 'subscribely-recurring-billing-for-woocommerce' ),
 				),
 				'public'              => false,
 				'show_ui'             => true,
@@ -107,7 +107,7 @@ class WFS_Subscription {
 				array(
 					'post_type'   => self::POST_TYPE,
 					'post_status' => 'publish',
-					'post_title'  => sprintf( __( 'Subscription for order #%s', 'subscribely-recurring-billing' ), $order->get_order_number() ),
+					'post_title'  => sprintf( __( 'Subscription for order #%s', 'subscribely-recurring-billing-for-woocommerce' ), $order->get_order_number() ),
 					'post_author' => (int) $order->get_customer_id(),
 				)
 			);
@@ -191,10 +191,10 @@ class WFS_Subscription {
 	public static function columns() {
 		return array(
 			'cb'       => '<input type="checkbox" />',
-			'title'    => __( 'Subscription', 'subscribely-recurring-billing' ),
-			'status'   => __( 'Status', 'subscribely-recurring-billing' ),
-			'customer' => __( 'Customer', 'subscribely-recurring-billing' ),
-			'next'     => __( 'Next payment', 'subscribely-recurring-billing' ),
+			'title'    => __( 'Subscription', 'subscribely-recurring-billing-for-woocommerce' ),
+			'status'   => __( 'Status', 'subscribely-recurring-billing-for-woocommerce' ),
+			'customer' => __( 'Customer', 'subscribely-recurring-billing-for-woocommerce' ),
+			'next'     => __( 'Next payment', 'subscribely-recurring-billing-for-woocommerce' ),
 		);
 	}
 
@@ -209,10 +209,10 @@ class WFS_Subscription {
 			echo esc_html( ucwords( str_replace( '-', ' ', get_post_meta( $post_id, '_wfs_status', true ) ) ) );
 		} elseif ( 'customer' === $column ) {
 			$customer = get_userdata( (int) get_post_meta( $post_id, '_wfs_customer_id', true ) );
-			echo $customer ? esc_html( $customer->display_name ) : '&mdash;';
+			echo esc_html( $customer ? $customer->display_name : '—' );
 		} elseif ( 'next' === $column ) {
 			$next = (int) get_post_meta( $post_id, '_wfs_next_payment', true );
-			echo $next ? esc_html( wp_date( wc_date_format(), $next ) ) : '&mdash;';
+			echo esc_html( $next ? wp_date( wc_date_format(), $next ) : '—' );
 		}
 	}
 }

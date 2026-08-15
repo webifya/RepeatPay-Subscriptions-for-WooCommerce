@@ -2,13 +2,13 @@
 Contributors: webifya
 Tags: woocommerce, subscriptions, recurring payments, subscription products, renewal orders
 Requires at least: 6.4
-Tested up to: 6.8
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.5.5
+Stable tag: 0.5.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Create flexible WooCommerce subscriptions with scheduled renewals, failed-payment recovery, trials, sign-up fees, and gateway-neutral renewal invoices.
+WooCommerce subscriptions with renewals, payment recovery, trials, sign-up fees, and gateway-neutral invoices.
 
 == Description ==
 
@@ -18,7 +18,7 @@ After the initial order is paid, Subscribely schedules each renewal, creates a n
 
 Developed by Mahfuzar Rahman. Company website: https://www.webninjallc.com/
 
-The Free edition uses customer-paid renewal invoices for broad gateway compatibility. Automatic off-session charging requires explicit saved-method support and is available in Subscribely PRO for compatible official Stripe, PayPal Payments, and Square gateways.
+The free plugin uses customer-paid renewal invoices for broad gateway compatibility. Automatic off-session charging requires explicit saved-method support and is provided by the separately distributed Subscribely PRO add-on for compatible official Stripe, PayPal Payments, and Square gateways.
 
 Features:
 
@@ -36,10 +36,11 @@ Features:
 * Free trials with configurable duration.
 * One-time sign-up fees.
 * Fixed renewal limits with automatic expiration.
+* Optional per-product text before or after the displayed subscription price.
 
 = Upgrade to Subscribely PRO =
 
-Subscribely PRO adds automatic supported-gateway renewals, retry handling with invoice fallback, customer pause and resume, early renewal, advanced administration, and protected subscriber downloads with limits and expiry.
+The separately distributed Subscribely PRO add-on provides automatic supported-gateway renewals, retry handling with invoice fallback, customer pause and resume, early renewal, advanced administration, and protected subscriber downloads with limits and expiry. No PRO implementation is included or locked inside this free plugin.
 
 Subscribely PRO is currently $69.99 per year. Learn more at https://webninjallc.com/plugins/subscribely/
 
@@ -83,9 +84,39 @@ Yes. The plugin declares compatibility with WooCommerce High-Performance Order S
 
 = What information is shared with Web Ninja LLC? =
 
-The Free edition shares a site profile only after an administrator explicitly opts in. It never sends orders, customers, payment details, or subscription records. Disabling permission requests deletion of the stored Free profile.
+The free plugin shares a compatibility profile only after an administrator explicitly selects the opt-in checkbox under WooCommerce > Subscription settings. It never sends orders, customer records, payment details, or subscription records. See External services below for the complete disclosure. Disabling permission sends an erasure request and stops future sharing.
+
+== External services ==
+
+Subscribely can optionally connect to a Web Ninja LLC service at `https://www.webninjallc.com/wp-json/wnlm/v1/site-profile`. This connection is disabled by default and is not required for any subscription feature.
+
+When an administrator explicitly opts in, the plugin sends the website URL and name, administrator email address, WordPress and PHP versions, active theme name, locale, environment type, multisite status, plugin version, and a random installation identifier. The service uses this compatibility profile to improve updates, compatibility, and support. It is sent when consent is enabled, after this plugin is updated, and weekly while consent remains enabled.
+
+When consent is disabled, the plugin sends the website URL and installation identifier with consent set to false so the stored profile can be erased. It then removes the local installation identifier and stops scheduled sharing. Orders, customer records, payment details, and subscription records are never sent.
+
+Service and privacy information: https://www.webninjallc.com/plugins/subscribely/
+
+== Development ==
+
+Public development repository: https://github.com/webifya/Subscribely-Recurring-Billing-for-WooCommerce
+
+The distributed PHP is the human-readable source. The plugin has no compiled, minified, or externally loaded executable code and requires no build process.
 
 == Changelog ==
+
+= 0.5.8 =
+* Added a contextual, dismissible review request after 14 days of actual subscription use.
+* Added original WordPress.org plugin icon and banner artwork to the development repository.
+* Kept direct, untracked upgrade links limited to relevant plugin administration locations and clarified the separate add-on model.
+
+= 0.5.7 =
+* Prepared the plugin for WordPress.org review with transparent external-service code and documentation.
+* Added suggested privacy-policy text for local subscription records and optional compatibility-profile sharing.
+* Added explicit product-save authorization checks and aligned the translation domain with the expected directory slug.
+* Clarified that Subscribely PRO is a separately distributed add-on and that no premium implementation is locked in the free plugin.
+
+= 0.5.6 =
+* Added optional per-product prefix and suffix text for subscription price displays.
 
 = 0.5.5 =
 * Simplified plugin-row metadata by retaining Documentation and removing duplicate FAQ and Plugin details links.
@@ -112,49 +143,4 @@ The Free edition shares a site profile only after an administrator explicitly op
 * Updated plugin metadata, administration copy, documentation, and translation domain.
 * Preserved all existing `wfs_` subscription records, hooks, schedules, and product types for seamless upgrades.
 
-= 0.4.4 =
-* Added an Upgrade to PRO menu and feature overview for free-edition users.
-* Added a $49.99/year single-site upgrade link to the Plugins screen.
-* Automatically hides upgrade promotion when PRO is active.
-
-= 0.4.3 =
-* Simplified cart and checkout billing terms to formats such as "$55 per year".
-* Added a live fallback for blank credit-card radio labels in classic and block checkout.
-
-= 0.4.2 =
-* Updated plugin authorship to Mahfuzar Rahman and added official profile and company URLs.
-
-= 0.4.1 =
-* Prevented enabled checkout gateways from displaying a blank payment-method title.
-* Added classic Checkout and Checkout Blocks label-visibility compatibility.
-* Added light hosted-field styling for Stripe and Square card inputs.
-
-= 0.4.0 =
-* Added full subscription terms to cart and checkout.
-* Added stable subscription status and renewal-paid integration events.
-* Added secure payment-token and filtered gateway metadata transfer to renewal orders.
-* Added automatic-payment interception before manual renewal invoices are sent.
-
-= 0.3.2 =
-* Renamed the plugin to My Subscriptions for WooCommerce.
-
-= 0.3.1 =
-* Renamed the plugin to Subscriptions for WooCommerce.
-* Restored the pricing and inventory fields for subscription products.
-* Restored the add-to-cart form on subscription product pages.
-
-= 0.3.0 =
-* Added free-trial product settings and trialling lifecycle state.
-* Added one-time sign-up fees to initial checkout pricing.
-* Added optional renewal limits and automatic expiration.
-* Separated initial checkout pricing from recurring renewal pricing.
-
-= 0.2.0 =
-* Added configurable dunning and failed-payment reminders.
-* Added past-due and on-hold lifecycle states.
-* Added automatic subscription recovery after late payment.
-* Preserved the original recurring price and currency on renewal orders.
-* Added retry lifecycle extension hooks and order notes.
-
-= 0.1.0 =
-* Initial MVP.
+Earlier release history is available in the public development repository.

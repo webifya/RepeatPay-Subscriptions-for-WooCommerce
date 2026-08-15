@@ -44,6 +44,7 @@ final class WFS_Plugin {
 		require_once WFS_PLUGIN_PATH . 'includes/class-wfs-settings.php';
 		require_once WFS_PLUGIN_PATH . 'includes/class-wfs-site-profile.php';
 		require_once WFS_PLUGIN_PATH . 'includes/class-wfs-upgrade.php';
+		require_once WFS_PLUGIN_PATH . 'includes/class-wfs-review.php';
 
 		WFS_Product::init();
 		WFS_Subscription::init();
@@ -52,6 +53,7 @@ final class WFS_Plugin {
 		WFS_Settings::init();
 		WFS_Site_Profile::init();
 		WFS_Upgrade::init();
+		WFS_Review::init();
 
 		add_filter( 'woocommerce_gateway_title', array( __CLASS__, 'payment_gateway_title' ), 999, 2 );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'checkout_styles' ), 30 );
@@ -73,21 +75,21 @@ final class WFS_Plugin {
 		}
 
 		$known = array(
-			'stripe'                   => __( 'Credit or debit card', 'subscribely-recurring-billing' ),
-			'stripe_cc'                => __( 'Credit or debit card', 'subscribely-recurring-billing' ),
-			'stripe_googlepay'         => __( 'Google Pay', 'subscribely-recurring-billing' ),
-			'stripe_applepay'          => __( 'Apple Pay', 'subscribely-recurring-billing' ),
-			'square_credit_card'       => __( 'Credit or debit card (Square)', 'subscribely-recurring-billing' ),
-			'ppcp-gateway'             => __( 'PayPal', 'subscribely-recurring-billing' ),
-			'ppcp-credit-card-gateway' => __( 'Credit or debit card (PayPal)', 'subscribely-recurring-billing' ),
-			'ppcp-card-button-gateway' => __( 'Credit or debit card (PayPal)', 'subscribely-recurring-billing' ),
+			'stripe'                   => __( 'Credit or debit card', 'subscribely-recurring-billing-for-woocommerce' ),
+			'stripe_cc'                => __( 'Credit or debit card', 'subscribely-recurring-billing-for-woocommerce' ),
+			'stripe_googlepay'         => __( 'Google Pay', 'subscribely-recurring-billing-for-woocommerce' ),
+			'stripe_applepay'          => __( 'Apple Pay', 'subscribely-recurring-billing-for-woocommerce' ),
+			'square_credit_card'       => __( 'Credit or debit card (Square)', 'subscribely-recurring-billing-for-woocommerce' ),
+			'ppcp-gateway'             => __( 'PayPal', 'subscribely-recurring-billing-for-woocommerce' ),
+			'ppcp-credit-card-gateway' => __( 'Credit or debit card (PayPal)', 'subscribely-recurring-billing-for-woocommerce' ),
+			'ppcp-card-button-gateway' => __( 'Credit or debit card (PayPal)', 'subscribely-recurring-billing-for-woocommerce' ),
 		);
 		if ( isset( $known[ $gateway_id ] ) ) {
 			return $known[ $gateway_id ];
 		}
 
 		$fallback = ucwords( str_replace( array( '-', '_' ), ' ', sanitize_key( $gateway_id ) ) );
-		return $fallback ?: __( 'Payment method', 'subscribely-recurring-billing' );
+		return $fallback ?: __( 'Payment method', 'subscribely-recurring-billing-for-woocommerce' );
 	}
 
 	/**
@@ -143,7 +145,7 @@ final class WFS_Plugin {
 	 */
 	public static function woocommerce_notice() {
 		echo '<div class="notice notice-error"><p>';
-		echo esc_html__( 'Subscribely – Recurring Billing for WooCommerce requires WooCommerce to be installed and active.', 'subscribely-recurring-billing' );
+		echo esc_html__( 'Subscribely – Recurring Billing for WooCommerce requires WooCommerce to be installed and active.', 'subscribely-recurring-billing-for-woocommerce' );
 		echo '</p></div>';
 	}
 }

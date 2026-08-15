@@ -8,16 +8,35 @@
 defined( 'ABSPATH' ) || exit;
 
 class WFS_Site_Profile {
-	const CRON = 'wfs_weekly_site_profile';
+	const CRON     = 'wfs_weekly_site_profile';
+	const ENDPOINT = 'https://www.webninjallc.com/wp-json/wnlm/v1/site-profile';
 
 	/** Register profile refresh hooks. */
 	public static function init() {
+		add_filter( 'cron_schedules', array( __CLASS__, 'cron_schedules' ) );
 		add_action( self::CRON, array( __CLASS__, 'send' ) );
 		add_action( 'add_option_' . WFS_Settings::OPTION, array( __CLASS__, 'settings_added' ), 10, 2 );
 		add_action( 'update_option_' . WFS_Settings::OPTION, array( __CLASS__, 'settings_updated' ), 10, 2 );
 		add_action( 'admin_init', array( __CLASS__, 'schedule' ) );
+		add_action( 'admin_init', array( __CLASS__, 'privacy_policy_content' ) );
 		add_action( 'upgrader_process_complete', array( __CLASS__, 'plugin_updated' ), 10, 2 );
 		self::schedule();
+	}
+
+	/**
+	 * Add the weekly interval used for consented compatibility-profile refreshes.
+	 *
+	 * @param array $schedules Registered cron schedules.
+	 * @return array
+	 */
+	public static function cron_schedules( $schedules ) {
+		if ( ! isset( $schedules['weekly'] ) ) {
+			$schedules['weekly'] = array(
+				'interval' => WEEK_IN_SECONDS,
+				'display'  => __( 'Once Weekly', 'subscribely-recurring-billing-for-woocommerce' ),
+			);
+		}
+		return $schedules;
 	}
 
 	/** Send immediately when the settings option is saved for the first time. */
@@ -65,8 +84,8 @@ class WFS_Site_Profile {
 	 */
 	public static function send( $consent = null ) {
 		$consent = null === $consent ? (bool) WFS_Settings::get( 'share_site_profile' ) : (bool) $consent;
-		$body    = self::profile( $consent );
-		$response = wp_remote_post(
+		$body     = self::profile( $consent );
+		$response = wp_safe_remote_post(
 			self::endpoint(),
 			array(
 				'timeout'   => 12,
@@ -79,24 +98,26 @@ class WFS_Site_Profile {
 			return $response;
 		}
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
-		return wp_remote_retrieve_response_code( $response ) >= 400
-			? new WP_Error( 'wfs_profile_rejected', sanitize_text_field( $data['message'] ?? __( 'The site profile was not accepted.', 'subscribely-recurring-billing' ) ) )
-			: ( is_array( $data ) ? $data : array() );
+		if ( wp_remote_retrieve_response_code( $response ) >= 400 ) {
+			$message = is_array( $data ) && isset( $data['message'] ) ? $data['message'] : __( 'The site profile was not accepted.', 'subscribely-recurring-billing-for-woocommerce' );
+			return new WP_Error( 'wfs_profile_rejected', sanitize_text_field( $message ) );
+		}
+		if ( ! $consent ) {
+			delete_option( 'wfs_site_profile_instance_id' );
+		}
+		return is_array( $data ) ? $data : array();
 	}
 
 	/** Build profile data. Personal fields are populated only after opt-in. */
 	private static function profile( $consent ) {
 		global $wp_version;
-		$admin = get_user_by( 'email', get_option( 'admin_email' ) );
 		$theme = wp_get_theme();
 		return array(
 			'consent'            => $consent ? 'true' : 'false',
 			'consent_version'    => '1.0',
 			'site_url'           => home_url(),
 			'site_name'          => $consent ? get_bloginfo( 'name' ) : '',
-			'admin_name'         => $consent && $admin ? $admin->display_name : '',
 			'admin_email'        => $consent ? sanitize_email( get_option( 'admin_email' ) ) : '',
-			'admin_phone'        => $consent ? sanitize_text_field( get_option( 'woocommerce_store_phone', '' ) ) : '',
 			'plugin_name'        => 'Subscribely – Recurring Billing for WooCommerce',
 			'plugin_slug'        => 'subscribely-recurring-billing-for-woocommerce',
 			'plugin_version'     => WFS_VERSION,
@@ -106,7 +127,8 @@ class WFS_Site_Profile {
 			'php_version'        => $consent ? PHP_VERSION : '',
 			'active_theme'       => $consent ? $theme->get( 'Name' ) : '',
 			'is_multisite'       => $consent && is_multisite() ? 'true' : 'false',
-			'server_ip'          => $consent && isset( $_SERVER['SERVER_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_ADDR'] ) ) : '',
+			'locale'             => $consent ? determine_locale() : '',
+			'environment'        => $consent ? wp_get_environment_type() : '',
 		);
 	}
 
@@ -120,8 +142,26 @@ class WFS_Site_Profile {
 		return sanitize_text_field( $id );
 	}
 
-	/** Keep the collector URL out of settings and rendered source. */
+	/** Return the documented profile collector URL. */
 	private static function endpoint() {
-		return apply_filters( 'wfs_site_profile_api_url', base64_decode( 'aHR0cHM6Ly93d3cud2VibmluamFsbGMuY29tL3dwLWpzb24vd25sbS92MS9zaXRlLXByb2ZpbGU=' ) );
+		return apply_filters( 'wfs_site_profile_api_url', self::ENDPOINT );
+	}
+
+	/** Add suggested privacy-policy text for stored subscription data and optional sharing. */
+	public static function privacy_policy_content() {
+		if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+			return;
+		}
+
+		$content = sprintf(
+			/* translators: %s: URL to Subscribely service and privacy information. */
+			__( 'Subscribely stores subscription records in this website’s WordPress database and associates them with WooCommerce customers and orders so recurring invoices can be created and managed. These records remain on the website unless the site owner removes them. If an administrator explicitly enables compatibility-profile sharing, the website sends its URL and name, administrator email address, WordPress and PHP versions, active theme name, locale, environment type, multisite status, plugin version, and a random installation identifier to Web Ninja LLC. The profile is refreshed weekly while consent remains enabled. Disabling the setting sends an erasure request and stops future sharing. Subscribely does not send orders, customer records, payment details, or subscription records to this service. Service and privacy information is available at <a href="%s">Web Ninja LLC</a>.', 'subscribely-recurring-billing-for-woocommerce' ),
+			esc_url( 'https://www.webninjallc.com/plugins/subscribely/' )
+		);
+
+		wp_add_privacy_policy_content(
+			__( 'Subscribely – Recurring Billing for WooCommerce', 'subscribely-recurring-billing-for-woocommerce' ),
+			wp_kses_post( wpautop( $content, false ) )
+		);
 	}
 }
