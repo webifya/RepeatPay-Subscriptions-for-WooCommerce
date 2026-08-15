@@ -32,7 +32,7 @@ class WFS_Product {
 	 * @return array
 	 */
 	public static function add_product_type( $types ) {
-		$types['wfs_subscription'] = __( 'Subscription', 'subscribely-recurring-billing' );
+		$types['wfs_subscription'] = __( 'Subscription', 'subscribely-recurring-billing-for-woocommerce' );
 		return $types;
 	}
 
@@ -56,7 +56,7 @@ class WFS_Product {
 		woocommerce_wp_text_input(
 			array(
 				'id'                => '_wfs_interval',
-				'label'             => __( 'Billing interval', 'subscribely-recurring-billing' ),
+				'label'             => __( 'Billing interval', 'subscribely-recurring-billing-for-woocommerce' ),
 				'type'              => 'number',
 				'value'             => get_post_meta( get_the_ID(), '_wfs_interval', true ) ?: 1,
 				'custom_attributes' => array( 'min' => 1, 'step' => 1 ),
@@ -66,12 +66,12 @@ class WFS_Product {
 		woocommerce_wp_select(
 			array(
 				'id'      => '_wfs_period',
-				'label'   => __( 'Billing period', 'subscribely-recurring-billing' ),
+				'label'   => __( 'Billing period', 'subscribely-recurring-billing-for-woocommerce' ),
 				'options' => array(
-					'day'   => __( 'Day(s)', 'subscribely-recurring-billing' ),
-					'week'  => __( 'Week(s)', 'subscribely-recurring-billing' ),
-					'month' => __( 'Month(s)', 'subscribely-recurring-billing' ),
-					'year'  => __( 'Year(s)', 'subscribely-recurring-billing' ),
+					'day'   => __( 'Day(s)', 'subscribely-recurring-billing-for-woocommerce' ),
+					'week'  => __( 'Week(s)', 'subscribely-recurring-billing-for-woocommerce' ),
+					'month' => __( 'Month(s)', 'subscribely-recurring-billing-for-woocommerce' ),
+					'year'  => __( 'Year(s)', 'subscribely-recurring-billing-for-woocommerce' ),
 				),
 			)
 		);
@@ -79,8 +79,8 @@ class WFS_Product {
 		woocommerce_wp_text_input(
 			array(
 				'id'                => '_wfs_trial_days',
-				'label'             => __( 'Free trial', 'subscribely-recurring-billing' ),
-				'description'       => __( 'Number of free-trial days before the first recurring payment.', 'subscribely-recurring-billing' ),
+				'label'             => __( 'Free trial', 'subscribely-recurring-billing-for-woocommerce' ),
+				'description'       => __( 'Number of free-trial days before the first recurring payment.', 'subscribely-recurring-billing-for-woocommerce' ),
 				'desc_tip'          => true,
 				'type'              => 'number',
 				'value'             => get_post_meta( get_the_ID(), '_wfs_trial_days', true ) ?: 0,
@@ -91,8 +91,8 @@ class WFS_Product {
 		woocommerce_wp_text_input(
 			array(
 				'id'          => '_wfs_signup_fee',
-				'label'       => __( 'Sign-up fee', 'subscribely-recurring-billing' ) . ' (' . get_woocommerce_currency_symbol() . ')',
-				'description' => __( 'One-time fee charged at checkout, including when a free trial is used.', 'subscribely-recurring-billing' ),
+				'label'       => __( 'Sign-up fee', 'subscribely-recurring-billing-for-woocommerce' ) . ' (' . get_woocommerce_currency_symbol() . ')',
+				'description' => __( 'One-time fee charged at checkout, including when a free trial is used.', 'subscribely-recurring-billing-for-woocommerce' ),
 				'desc_tip'    => true,
 				'data_type'   => 'price',
 				'value'       => get_post_meta( get_the_ID(), '_wfs_signup_fee', true ) ?: '',
@@ -102,12 +102,32 @@ class WFS_Product {
 		woocommerce_wp_text_input(
 			array(
 				'id'                => '_wfs_renewal_limit',
-				'label'             => __( 'Renewal payment limit', 'subscribely-recurring-billing' ),
-				'description'       => __( 'Maximum successful renewal payments. Use 0 for an ongoing subscription.', 'subscribely-recurring-billing' ),
+				'label'             => __( 'Renewal payment limit', 'subscribely-recurring-billing-for-woocommerce' ),
+				'description'       => __( 'Maximum successful renewal payments. Use 0 for an ongoing subscription.', 'subscribely-recurring-billing-for-woocommerce' ),
 				'desc_tip'          => true,
 				'type'              => 'number',
 				'value'             => get_post_meta( get_the_ID(), '_wfs_renewal_limit', true ) ?: 0,
 				'custom_attributes' => array( 'min' => 0, 'step' => 1 ),
+			)
+		);
+
+		woocommerce_wp_text_input(
+			array(
+				'id'          => '_wfs_price_prefix',
+				'label'       => __( 'Price display prefix', 'subscribely-recurring-billing-for-woocommerce' ),
+				'description' => __( 'Optional text shown before the subscription price, for example “Starting from”.', 'subscribely-recurring-billing-for-woocommerce' ),
+				'desc_tip'    => true,
+				'value'       => get_post_meta( get_the_ID(), '_wfs_price_prefix', true ),
+			)
+		);
+
+		woocommerce_wp_text_input(
+			array(
+				'id'          => '_wfs_price_suffix',
+				'label'       => __( 'Price display suffix', 'subscribely-recurring-billing-for-woocommerce' ),
+				'description' => __( 'Optional text shown after the price and billing period, for example “until your birthday”.', 'subscribely-recurring-billing-for-woocommerce' ),
+				'desc_tip'    => true,
+				'value'       => get_post_meta( get_the_ID(), '_wfs_price_suffix', true ),
 			)
 		);
 
@@ -124,6 +144,11 @@ class WFS_Product {
 			return;
 		}
 
+		$nonce = isset( $_POST['woocommerce_meta_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['woocommerce_meta_nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'woocommerce_save_data' ) || ! current_user_can( 'edit_post', $product->get_id() ) ) {
+			return;
+		}
+
 		$interval = isset( $_POST['_wfs_interval'] ) ? absint( wp_unslash( $_POST['_wfs_interval'] ) ) : 1;
 		$period   = isset( $_POST['_wfs_period'] ) ? sanitize_key( wp_unslash( $_POST['_wfs_period'] ) ) : 'month';
 		$period   = in_array( $period, array( 'day', 'week', 'month', 'year' ), true ) ? $period : 'month';
@@ -133,6 +158,8 @@ class WFS_Product {
 		$product->update_meta_data( '_wfs_trial_days', isset( $_POST['_wfs_trial_days'] ) ? absint( wp_unslash( $_POST['_wfs_trial_days'] ) ) : 0 );
 		$product->update_meta_data( '_wfs_signup_fee', isset( $_POST['_wfs_signup_fee'] ) ? wc_format_decimal( wp_unslash( $_POST['_wfs_signup_fee'] ) ) : '' );
 		$product->update_meta_data( '_wfs_renewal_limit', isset( $_POST['_wfs_renewal_limit'] ) ? absint( wp_unslash( $_POST['_wfs_renewal_limit'] ) ) : 0 );
+		$product->update_meta_data( '_wfs_price_prefix', isset( $_POST['_wfs_price_prefix'] ) ? sanitize_text_field( wp_unslash( $_POST['_wfs_price_prefix'] ) ) : '' );
+		$product->update_meta_data( '_wfs_price_suffix', isset( $_POST['_wfs_price_suffix'] ) ? sanitize_text_field( wp_unslash( $_POST['_wfs_price_suffix'] ) ) : '' );
 	}
 
 	/**
@@ -151,22 +178,33 @@ class WFS_Product {
 		$period   = sanitize_key( $product->get_meta( '_wfs_period' ) ?: 'month' );
 		$label    = 1 === $interval ? $period : $interval . ' ' . $period . 's';
 
-		$details    = array( sprintf( __( 'every %s', 'subscribely-recurring-billing' ), $label ) );
+		$details    = array( sprintf( __( 'every %s', 'subscribely-recurring-billing-for-woocommerce' ), $label ) );
 		$trial_days = absint( $product->get_meta( '_wfs_trial_days' ) );
 		$signup_fee = (float) $product->get_meta( '_wfs_signup_fee' );
 
 		if ( $trial_days ) {
 			$details[] = sprintf(
 				/* translators: %d: number of trial days. */
-				_n( '%d-day free trial', '%d-day free trial', $trial_days, 'subscribely-recurring-billing' ),
+				_n( '%d-day free trial', '%d-day free trial', $trial_days, 'subscribely-recurring-billing-for-woocommerce' ),
 				$trial_days
 			);
 		}
 		if ( $signup_fee > 0 ) {
-			$details[] = sprintf( __( '%s sign-up fee', 'subscribely-recurring-billing' ), html_entity_decode( wp_strip_all_tags( wc_price( $signup_fee ) ), ENT_QUOTES, get_bloginfo( 'charset' ) ) );
+			$details[] = sprintf( __( '%s sign-up fee', 'subscribely-recurring-billing-for-woocommerce' ), html_entity_decode( wp_strip_all_tags( wc_price( $signup_fee ) ), ENT_QUOTES, get_bloginfo( 'charset' ) ) );
 		}
 
-		return $html . ' <span class="wfs-period">' . esc_html( implode( ' · ', $details ) ) . '</span>';
+		$price_html = $html . ' <span class="wfs-period">' . esc_html( implode( ' · ', $details ) ) . '</span>';
+		$prefix     = trim( (string) $product->get_meta( '_wfs_price_prefix' ) );
+		$suffix     = trim( (string) $product->get_meta( '_wfs_price_suffix' ) );
+
+		if ( '' !== $prefix ) {
+			$price_html = '<span class="wfs-price-prefix">' . esc_html( $prefix ) . '</span> ' . $price_html;
+		}
+		if ( '' !== $suffix ) {
+			$price_html .= ' <span class="wfs-price-suffix">' . esc_html( $suffix ) . '</span>';
+		}
+
+		return apply_filters( 'wfs_subscription_price_html', $price_html, $product, $html );
 	}
 
 	/**
@@ -209,22 +247,22 @@ class WFS_Product {
 		$recurring = isset( $cart_item['_wfs_recurring_price'] ) ? (float) $cart_item['_wfs_recurring_price'] : (float) $product->get_regular_price();
 		$price     = html_entity_decode( wp_strip_all_tags( wc_price( $recurring ) ), ENT_QUOTES, get_bloginfo( 'charset' ) );
 		$cadence   = 1 === $interval
-			? sprintf( __( '%1$s per %2$s', 'subscribely-recurring-billing' ), $price, $period )
-			: sprintf( __( '%1$s every %2$d %3$ss', 'subscribely-recurring-billing' ), $price, $interval, $period );
-		$data[]    = array( 'key' => __( 'Billing', 'subscribely-recurring-billing' ), 'value' => $cadence );
+			? sprintf( __( '%1$s per %2$s', 'subscribely-recurring-billing-for-woocommerce' ), $price, $period )
+			: sprintf( __( '%1$s every %2$d %3$ss', 'subscribely-recurring-billing-for-woocommerce' ), $price, $interval, $period );
+		$data[]    = array( 'key' => __( 'Billing', 'subscribely-recurring-billing-for-woocommerce' ), 'value' => $cadence );
 
 		$trial = absint( $product->get_meta( '_wfs_trial_days' ) );
 		if ( $trial ) {
 			$data[] = array(
-				'key'   => __( 'Free trial', 'subscribely-recurring-billing' ),
-				'value' => sprintf( _n( '%d day', '%d days', $trial, 'subscribely-recurring-billing' ), $trial ),
+				'key'   => __( 'Free trial', 'subscribely-recurring-billing-for-woocommerce' ),
+				'value' => sprintf( _n( '%d day', '%d days', $trial, 'subscribely-recurring-billing-for-woocommerce' ), $trial ),
 			);
 		}
 
 		$signup = (float) $product->get_meta( '_wfs_signup_fee' );
 		if ( $signup > 0 ) {
 			$data[] = array(
-				'key'   => __( 'One-time sign-up fee', 'subscribely-recurring-billing' ),
+				'key'   => __( 'One-time sign-up fee', 'subscribely-recurring-billing-for-woocommerce' ),
 				'value' => wp_strip_all_tags( wc_price( $signup ) ),
 			);
 		}
@@ -232,7 +270,7 @@ class WFS_Product {
 		$limit = absint( $product->get_meta( '_wfs_renewal_limit' ) );
 		if ( $limit ) {
 			$data[] = array(
-				'key'   => __( 'Renewal payments', 'subscribely-recurring-billing' ),
+				'key'   => __( 'Renewal payments', 'subscribely-recurring-billing-for-woocommerce' ),
 				'value' => (string) $limit,
 			);
 		}

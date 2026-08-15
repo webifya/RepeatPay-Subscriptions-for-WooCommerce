@@ -24,8 +24,8 @@ class WFS_Settings {
 	public static function menu() {
 		add_submenu_page(
 			'woocommerce',
-			__( 'Subscription settings', 'subscribely-recurring-billing' ),
-			__( 'Subscription settings', 'subscribely-recurring-billing' ),
+			__( 'Subscription settings', 'subscribely-recurring-billing-for-woocommerce' ),
+			__( 'Subscription settings', 'subscribely-recurring-billing-for-woocommerce' ),
 			'manage_woocommerce',
 			'wfs-settings',
 			array( __CLASS__, 'page' )
@@ -48,14 +48,14 @@ class WFS_Settings {
 
 		add_settings_section(
 			'wfs_dunning',
-			__( 'Failed-payment recovery', 'subscribely-recurring-billing' ),
+			__( 'Failed-payment recovery', 'subscribely-recurring-billing-for-woocommerce' ),
 			array( __CLASS__, 'section' ),
 			'wfs-settings'
 		);
 
 		add_settings_field(
 			'retry_days',
-			__( 'Days between reminders', 'subscribely-recurring-billing' ),
+			__( 'Days between reminders', 'subscribely-recurring-billing-for-woocommerce' ),
 			array( __CLASS__, 'number_field' ),
 			'wfs-settings',
 			'wfs_dunning',
@@ -64,20 +64,20 @@ class WFS_Settings {
 
 		add_settings_section(
 			'wfs_privacy',
-			__( 'Site profile and privacy', 'subscribely-recurring-billing' ),
+			__( 'Site profile and privacy', 'subscribely-recurring-billing-for-woocommerce' ),
 			array( __CLASS__, 'privacy_section' ),
 			'wfs-settings'
 		);
 		add_settings_field(
 			'share_site_profile',
-			__( 'Share site profile', 'subscribely-recurring-billing' ),
+			__( 'Share site profile', 'subscribely-recurring-billing-for-woocommerce' ),
 			array( __CLASS__, 'profile_consent_field' ),
 			'wfs-settings',
 			'wfs_privacy'
 		);
 		add_settings_field(
 			'max_retries',
-			__( 'Maximum reminders', 'subscribely-recurring-billing' ),
+			__( 'Maximum reminders', 'subscribely-recurring-billing-for-woocommerce' ),
 			array( __CLASS__, 'number_field' ),
 			'wfs-settings',
 			'wfs_dunning',
@@ -128,12 +128,12 @@ class WFS_Settings {
 	 * Settings introduction.
 	 */
 	public static function section() {
-		echo '<p>' . esc_html__( 'Unpaid renewal orders are reminded automatically. After the final attempt, the subscription is placed on hold until the order is paid.', 'subscribely-recurring-billing' ) . '</p>';
+		echo '<p>' . esc_html__( 'Unpaid renewal orders are reminded automatically. After the final attempt, the subscription is placed on hold until the order is paid.', 'subscribely-recurring-billing-for-woocommerce' ) . '</p>';
 	}
 
 	/** Explain the optional profile collection. */
 	public static function privacy_section() {
-		echo '<p>' . esc_html__( 'Help Web Ninja LLC understand compatibility and provide support. Nothing is shared unless you opt in, and disabling the option requests deletion of the stored profile.', 'subscribely-recurring-billing' ) . '</p>';
+		echo '<p>' . esc_html__( 'Help Web Ninja LLC understand compatibility and provide support. Nothing is shared unless you opt in, and disabling the option requests deletion of the stored profile.', 'subscribely-recurring-billing-for-woocommerce' ) . '</p>';
 	}
 
 	/** Render explicit site-profile consent. */
@@ -142,7 +142,7 @@ class WFS_Settings {
 			'<label><input type="checkbox" name="%1$s[share_site_profile]" value="1" %2$s /> %3$s</label>',
 			esc_attr( self::OPTION ),
 			checked( self::get( 'share_site_profile' ), 1, false ),
-			esc_html__( 'Allow Subscribely to share this website profile to receive regular updates and compatibility support.', 'subscribely-recurring-billing' )
+			esc_html__( 'Allow Subscribely to share this website profile to receive regular updates and compatibility support.', 'subscribely-recurring-billing-for-woocommerce' )
 		);
 	}
 
@@ -171,7 +171,7 @@ class WFS_Settings {
 		}
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Subscribely – Recurring Billing for WooCommerce settings', 'subscribely-recurring-billing' ); ?></h1>
+			<h1><?php esc_html_e( 'Subscribely – Recurring Billing for WooCommerce settings', 'subscribely-recurring-billing-for-woocommerce' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
 				settings_fields( 'wfs_settings' );
