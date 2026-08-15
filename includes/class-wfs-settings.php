@@ -83,6 +83,35 @@ class WFS_Settings {
 			'wfs_dunning',
 			array( 'key' => 'max_retries', 'min' => 1, 'max' => 10 )
 		);
+
+		add_settings_section(
+			'wfs_price_display',
+			__( 'Subscription price display', 'subscribely-recurring-billing-for-woocommerce' ),
+			array( __CLASS__, 'price_display_section' ),
+			'wfs-settings'
+		);
+		add_settings_field(
+			'price_prefix',
+			__( 'Default price prefix', 'subscribely-recurring-billing-for-woocommerce' ),
+			array( __CLASS__, 'text_field' ),
+			'wfs-settings',
+			'wfs_price_display',
+			array(
+				'key'         => 'price_prefix',
+				'placeholder' => __( 'Starting from', 'subscribely-recurring-billing-for-woocommerce' ),
+			)
+		);
+		add_settings_field(
+			'price_suffix',
+			__( 'Default price suffix', 'subscribely-recurring-billing-for-woocommerce' ),
+			array( __CLASS__, 'text_field' ),
+			'wfs-settings',
+			'wfs_price_display',
+			array(
+				'key'         => 'price_suffix',
+				'placeholder' => __( 'until your birthday', 'subscribely-recurring-billing-for-woocommerce' ),
+			)
+		);
 	}
 
 	/**
@@ -95,6 +124,8 @@ class WFS_Settings {
 			'retry_days'         => 3,
 			'max_retries'        => 3,
 			'share_site_profile' => 0,
+			'price_prefix'       => '',
+			'price_suffix'       => '',
 		);
 	}
 
@@ -102,10 +133,13 @@ class WFS_Settings {
 	 * Get one setting.
 	 *
 	 * @param string $key Setting key.
-	 * @return int
+	 * @return int|string
 	 */
 	public static function get( $key ) {
 		$values = wp_parse_args( get_option( self::OPTION, array() ), self::defaults() );
+		if ( in_array( $key, array( 'price_prefix', 'price_suffix' ), true ) ) {
+			return isset( $values[ $key ] ) ? sanitize_text_field( $values[ $key ] ) : '';
+		}
 		return isset( $values[ $key ] ) ? absint( $values[ $key ] ) : 0;
 	}
 
@@ -121,6 +155,8 @@ class WFS_Settings {
 			'retry_days'         => min( 30, max( 1, absint( $values['retry_days'] ?? 3 ) ) ),
 			'max_retries'        => min( 10, max( 1, absint( $values['max_retries'] ?? 3 ) ) ),
 			'share_site_profile' => empty( $values['share_site_profile'] ) ? 0 : 1,
+			'price_prefix'       => sanitize_text_field( $values['price_prefix'] ?? '' ),
+			'price_suffix'       => sanitize_text_field( $values['price_suffix'] ?? '' ),
 		);
 	}
 
@@ -134,6 +170,11 @@ class WFS_Settings {
 	/** Explain the optional profile collection. */
 	public static function privacy_section() {
 		echo '<p>' . esc_html__( 'Help Web Ninja LLC understand compatibility and provide support. Nothing is shared unless you opt in, and disabling the option requests deletion of the stored profile.', 'subscribely-recurring-billing-for-woocommerce' ) . '</p>';
+	}
+
+	/** Explain global subscription price wording. */
+	public static function price_display_section() {
+		echo '<p>' . esc_html__( 'Set optional text for all subscription prices. A product-specific prefix or suffix overrides the corresponding global value.', 'subscribely-recurring-billing-for-woocommerce' ) . '</p>';
 	}
 
 	/** Render explicit site-profile consent. */
@@ -159,6 +200,21 @@ class WFS_Settings {
 			esc_attr( self::get( $args['key'] ) ),
 			esc_attr( $args['min'] ),
 			esc_attr( $args['max'] )
+		);
+	}
+
+	/**
+	 * Render a plain-text setting.
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public static function text_field( $args ) {
+		printf(
+			'<input type="text" class="regular-text" name="%1$s[%2$s]" value="%3$s" placeholder="%4$s" />',
+			esc_attr( self::OPTION ),
+			esc_attr( $args['key'] ),
+			esc_attr( self::get( $args['key'] ) ),
+			esc_attr( $args['placeholder'] )
 		);
 	}
 

@@ -115,7 +115,7 @@ class WFS_Product {
 			array(
 				'id'          => '_wfs_price_prefix',
 				'label'       => __( 'Price display prefix', 'subscribely-recurring-billing-for-woocommerce' ),
-				'description' => __( 'Optional text shown before the subscription price, for example “Starting from”.', 'subscribely-recurring-billing-for-woocommerce' ),
+				'description' => __( 'Optional text shown before this subscription price. Leave empty to use the global setting.', 'subscribely-recurring-billing-for-woocommerce' ),
 				'desc_tip'    => true,
 				'value'       => get_post_meta( get_the_ID(), '_wfs_price_prefix', true ),
 			)
@@ -125,7 +125,7 @@ class WFS_Product {
 			array(
 				'id'          => '_wfs_price_suffix',
 				'label'       => __( 'Price display suffix', 'subscribely-recurring-billing-for-woocommerce' ),
-				'description' => __( 'Optional text shown after the price and billing period, for example “until your birthday”.', 'subscribely-recurring-billing-for-woocommerce' ),
+				'description' => __( 'Optional text shown after this price and billing period. Leave empty to use the global setting.', 'subscribely-recurring-billing-for-woocommerce' ),
 				'desc_tip'    => true,
 				'value'       => get_post_meta( get_the_ID(), '_wfs_price_suffix', true ),
 			)
@@ -196,6 +196,8 @@ class WFS_Product {
 		$price_html = $html . ' <span class="wfs-period">' . esc_html( implode( ' · ', $details ) ) . '</span>';
 		$prefix     = trim( (string) $product->get_meta( '_wfs_price_prefix' ) );
 		$suffix     = trim( (string) $product->get_meta( '_wfs_price_suffix' ) );
+		$prefix     = '' !== $prefix ? $prefix : trim( (string) WFS_Settings::get( 'price_prefix' ) );
+		$suffix     = '' !== $suffix ? $suffix : trim( (string) WFS_Settings::get( 'price_suffix' ) );
 
 		if ( '' !== $prefix ) {
 			$price_html = '<span class="wfs-price-prefix">' . esc_html( $prefix ) . '</span> ' . $price_html;
