@@ -4,7 +4,7 @@ Tags: woocommerce, subscriptions, recurring payments, subscription products, ren
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.5.8
+Stable tag: 0.5.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,6 +37,7 @@ Features:
 * One-time sign-up fees.
 * Fixed renewal limits with automatic expiration.
 * Optional per-product text before or after the displayed subscription price.
+* Optional global subscription price prefix and suffix with per-product overrides.
 
 = Upgrade to Subscribely PRO =
 
@@ -103,6 +104,9 @@ Public development repository: https://github.com/webifya/Subscribely-Recurring-
 The distributed PHP is the human-readable source. The plugin has no compiled, minified, or externally loaded executable code and requires no build process.
 
 == Changelog ==
+
+= 0.5.9 =
+* Added global subscription price prefix and suffix settings with per-product overrides.
 
 = 0.5.8 =
 * Added a contextual, dismissible review request after 14 days of actual subscription use.
