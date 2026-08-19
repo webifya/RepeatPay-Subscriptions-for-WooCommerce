@@ -2,13 +2,13 @@
 /**
  * Subscription settings.
  *
- * @package Subscribely_Recurring_Billing
+ * @package Renewly_Subscriptions
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class WFS_Settings {
-	const OPTION = 'wfs_dunning_settings';
+class RENEWLY_Settings {
+	const OPTION = 'renewly_dunning_settings';
 
 	/**
 	 * Set up hooks.
@@ -24,10 +24,10 @@ class WFS_Settings {
 	public static function menu() {
 		add_submenu_page(
 			'woocommerce',
-			__( 'Subscription settings', 'subscribely-recurring-billing-for-woocommerce' ),
-			__( 'Subscription settings', 'subscribely-recurring-billing-for-woocommerce' ),
+			__( 'Subscription settings', 'renewly-subscriptions-for-woocommerce' ),
+			__( 'Subscription settings', 'renewly-subscriptions-for-woocommerce' ),
 			'manage_woocommerce',
-			'wfs-settings',
+			'renewly-settings',
 			array( __CLASS__, 'page' )
 		);
 	}
@@ -37,7 +37,7 @@ class WFS_Settings {
 	 */
 	public static function register() {
 		register_setting(
-			'wfs_settings',
+			'renewly_settings',
 			self::OPTION,
 			array(
 				'type'              => 'array',
@@ -47,69 +47,69 @@ class WFS_Settings {
 		);
 
 		add_settings_section(
-			'wfs_dunning',
-			__( 'Failed-payment recovery', 'subscribely-recurring-billing-for-woocommerce' ),
+			'renewly_dunning',
+			__( 'Failed-payment recovery', 'renewly-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'section' ),
-			'wfs-settings'
+			'renewly-settings'
 		);
 
 		add_settings_field(
 			'retry_days',
-			__( 'Days between reminders', 'subscribely-recurring-billing-for-woocommerce' ),
+			__( 'Days between reminders', 'renewly-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'number_field' ),
-			'wfs-settings',
-			'wfs_dunning',
+			'renewly-settings',
+			'renewly_dunning',
 			array( 'key' => 'retry_days', 'min' => 1, 'max' => 30 )
 		);
 
 		add_settings_section(
-			'wfs_privacy',
-			__( 'Site profile and privacy', 'subscribely-recurring-billing-for-woocommerce' ),
+			'renewly_privacy',
+			__( 'Site profile and privacy', 'renewly-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'privacy_section' ),
-			'wfs-settings'
+			'renewly-settings'
 		);
 		add_settings_field(
 			'share_site_profile',
-			__( 'Share site profile', 'subscribely-recurring-billing-for-woocommerce' ),
+			__( 'Share site profile', 'renewly-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'profile_consent_field' ),
-			'wfs-settings',
-			'wfs_privacy'
+			'renewly-settings',
+			'renewly_privacy'
 		);
 		add_settings_field(
 			'max_retries',
-			__( 'Maximum reminders', 'subscribely-recurring-billing-for-woocommerce' ),
+			__( 'Maximum reminders', 'renewly-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'number_field' ),
-			'wfs-settings',
-			'wfs_dunning',
+			'renewly-settings',
+			'renewly_dunning',
 			array( 'key' => 'max_retries', 'min' => 1, 'max' => 10 )
 		);
 
 		add_settings_section(
-			'wfs_price_display',
-			__( 'Subscription price display', 'subscribely-recurring-billing-for-woocommerce' ),
+			'renewly_price_display',
+			__( 'Subscription price display', 'renewly-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'price_display_section' ),
-			'wfs-settings'
+			'renewly-settings'
 		);
 		add_settings_field(
 			'price_prefix',
-			__( 'Default price prefix', 'subscribely-recurring-billing-for-woocommerce' ),
+			__( 'Default price prefix', 'renewly-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'text_field' ),
-			'wfs-settings',
-			'wfs_price_display',
+			'renewly-settings',
+			'renewly_price_display',
 			array(
 				'key'         => 'price_prefix',
-				'placeholder' => __( 'Starting from', 'subscribely-recurring-billing-for-woocommerce' ),
+				'placeholder' => __( 'Starting from', 'renewly-subscriptions-for-woocommerce' ),
 			)
 		);
 		add_settings_field(
 			'price_suffix',
-			__( 'Default price suffix', 'subscribely-recurring-billing-for-woocommerce' ),
+			__( 'Default price suffix', 'renewly-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'text_field' ),
-			'wfs-settings',
-			'wfs_price_display',
+			'renewly-settings',
+			'renewly_price_display',
 			array(
 				'key'         => 'price_suffix',
-				'placeholder' => __( 'until your birthday', 'subscribely-recurring-billing-for-woocommerce' ),
+				'placeholder' => __( 'until your birthday', 'renewly-subscriptions-for-woocommerce' ),
 			)
 		);
 	}
@@ -164,17 +164,17 @@ class WFS_Settings {
 	 * Settings introduction.
 	 */
 	public static function section() {
-		echo '<p>' . esc_html__( 'Unpaid renewal orders are reminded automatically. After the final attempt, the subscription is placed on hold until the order is paid.', 'subscribely-recurring-billing-for-woocommerce' ) . '</p>';
+		echo '<p>' . esc_html__( 'Unpaid renewal orders are reminded automatically. After the final attempt, the subscription is placed on hold until the order is paid.', 'renewly-subscriptions-for-woocommerce' ) . '</p>';
 	}
 
 	/** Explain the optional profile collection. */
 	public static function privacy_section() {
-		echo '<p>' . esc_html__( 'Help Web Ninja LLC understand compatibility and provide support. Nothing is shared unless you opt in, and disabling the option requests deletion of the stored profile.', 'subscribely-recurring-billing-for-woocommerce' ) . '</p>';
+		echo '<p>' . esc_html__( 'Help Web Ninja LLC understand compatibility and provide support. Nothing is shared unless you opt in, and disabling the option requests deletion of the stored profile.', 'renewly-subscriptions-for-woocommerce' ) . '</p>';
 	}
 
 	/** Explain global subscription price wording. */
 	public static function price_display_section() {
-		echo '<p>' . esc_html__( 'Set optional text for all subscription prices. A product-specific prefix or suffix overrides the corresponding global value.', 'subscribely-recurring-billing-for-woocommerce' ) . '</p>';
+		echo '<p>' . esc_html__( 'Set optional text for all subscription prices. A product-specific prefix or suffix overrides the corresponding global value.', 'renewly-subscriptions-for-woocommerce' ) . '</p>';
 	}
 
 	/** Render explicit site-profile consent. */
@@ -183,7 +183,7 @@ class WFS_Settings {
 			'<label><input type="checkbox" name="%1$s[share_site_profile]" value="1" %2$s /> %3$s</label>',
 			esc_attr( self::OPTION ),
 			checked( self::get( 'share_site_profile' ), 1, false ),
-			esc_html__( 'Allow Subscribely to share this website profile to receive regular updates and compatibility support.', 'subscribely-recurring-billing-for-woocommerce' )
+			esc_html__( 'Allow Renewly to share this website profile to receive regular updates and compatibility support.', 'renewly-subscriptions-for-woocommerce' )
 		);
 	}
 
@@ -227,11 +227,11 @@ class WFS_Settings {
 		}
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Subscribely – Recurring Billing for WooCommerce settings', 'subscribely-recurring-billing-for-woocommerce' ); ?></h1>
+			<h1><?php esc_html_e( 'Renewly Subscriptions for WooCommerce settings', 'renewly-subscriptions-for-woocommerce' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
-				settings_fields( 'wfs_settings' );
-				do_settings_sections( 'wfs-settings' );
+				settings_fields( 'renewly_settings' );
+				do_settings_sections( 'renewly-settings' );
 				submit_button();
 				?>
 			</form>
