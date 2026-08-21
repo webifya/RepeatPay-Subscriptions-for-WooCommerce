@@ -1,10 +1,10 @@
-=== Renewly Subscriptions for WooCommerce ===
+=== RepeatPay Subscriptions for WooCommerce ===
 Contributors: mahfuzar
 Tags: woocommerce, subscriptions, recurring payments, subscription products, renewal orders
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 0.6.0
+Stable tag: 0.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,13 +12,13 @@ WooCommerce subscriptions with renewals, payment recovery, trials, sign-up fees,
 
 == Description ==
 
-Renewly Subscriptions for WooCommerce turns ordinary products into daily, weekly, monthly, or yearly subscriptions while keeping orders and checkout inside WooCommerce.
+RepeatPay Subscriptions for WooCommerce turns ordinary products into daily, weekly, monthly, or yearly subscriptions while keeping orders and checkout inside WooCommerce.
 
-After the initial order is paid, Renewly schedules each renewal, creates a normal WooCommerce renewal order, and gives the customer a clear subscription record in My Account. Renewal invoices work with any payment gateway enabled for that order. The plugin also handles failed-payment reminders, recovery, trials, sign-up fees, renewal limits, and renewal price snapshots.
+After the initial order is paid, RepeatPay schedules each renewal, creates a normal WooCommerce renewal order, and gives the customer a clear subscription record in My Account. Renewal invoices work with any payment gateway enabled for that order. The plugin also handles failed-payment reminders, recovery, trials, sign-up fees, renewal limits, and renewal price snapshots.
 
 Developed by Mahfuzar Rahman. Company website: https://www.webninjallc.com/
 
-The free plugin uses customer-paid renewal invoices for broad gateway compatibility. Automatic off-session charging requires explicit saved-method support and is provided by the separately distributed Renewly PRO add-on for compatible official Stripe, PayPal Payments, and Square gateways.
+The free plugin uses customer-paid renewal invoices for broad gateway compatibility. Automatic off-session charging requires explicit saved-method support and is provided by the separately distributed RepeatPay PRO add-on for compatible official Stripe, PayPal Payments, and Square gateways.
 
 Features:
 
@@ -28,7 +28,7 @@ Features:
 * Customer Subscriptions page with renewal payment and cancellation actions.
 * Subscription administration under WooCommerce.
 * HPOS-compatible order access.
-* Extension hook after renewal creation: `renewly_renewal_order_created`.
+* Extension hook after renewal creation: `repeatpay_renewal_order_created`.
 * Configurable failed-payment reminders and retry schedule.
 * Past-due and on-hold subscription states.
 * Automatic recovery when a late renewal is paid.
@@ -39,17 +39,17 @@ Features:
 * Optional per-product text before or after the displayed subscription price.
 * Optional global subscription price prefix and suffix with per-product overrides.
 
-= Upgrade to Renewly PRO =
+= Upgrade to RepeatPay PRO =
 
-The separately distributed Renewly PRO add-on provides automatic supported-gateway renewals, retry handling with invoice fallback, customer pause and resume, early renewal, advanced administration, and protected subscriber downloads with limits and expiry. No PRO implementation is included or locked inside this free plugin.
+The separately distributed RepeatPay PRO add-on provides automatic supported-gateway renewals, retry handling with invoice fallback, customer pause and resume, early renewal, advanced administration, and protected subscriber downloads with limits and expiry. No PRO implementation is included or locked inside this free plugin.
 
-Renewly PRO is currently $69.99 per year. Learn more at https://webninjallc.com/plugins/renewly/
+RepeatPay PRO is currently $69.99 per year. Learn more at https://webninjallc.com/plugins/repeatpay/
 
 == Installation ==
 
 1. Install and activate WooCommerce.
 2. Upload this plugin folder to `/wp-content/plugins/`.
-3. Activate Renewly Subscriptions for WooCommerce.
+3. Activate RepeatPay Subscriptions for WooCommerce.
 4. Create a product and choose "Subscription" as its product type.
 5. Set its price and billing interval, then publish it.
 
@@ -61,11 +61,11 @@ Yes. Customer-paid renewal invoices can use any gateway enabled for the renewal 
 
 = Does the Free edition automatically charge customers? =
 
-The Free edition creates scheduled renewal orders and customer-paid invoices. Renewly PRO can automatically charge compatible saved methods through supported official Stripe, PayPal Payments, and Square gateways.
+The Free edition creates scheduled renewal orders and customer-paid invoices. RepeatPay PRO can automatically charge compatible saved methods through supported official Stripe, PayPal Payments, and Square gateways.
 
 = What happens when a renewal payment fails? =
 
-Renewly records the failed renewal, schedules configured reminders, and updates the subscription lifecycle. A late paid renewal can recover the subscription automatically.
+RepeatPay records the failed renewal, schedules configured reminders, and updates the subscription lifecycle. A late paid renewal can recover the subscription automatically.
 
 = Can I offer free trials or charge a sign-up fee? =
 
@@ -77,9 +77,9 @@ Yes. Customers can view subscriptions and pay renewal orders. PRO adds merchant-
 
 = Can I sell downloadable subscription products? =
 
-Yes, with Renewly PRO. PRO protects WooCommerce downloads, applies limits and expiry, resets eligible access after renewal, and revokes access when entitlement ends.
+Yes, with RepeatPay PRO. PRO protects WooCommerce downloads, applies limits and expiry, resets eligible access after renewal, and revokes access when entitlement ends.
 
-= Does Renewly support HPOS? =
+= Does RepeatPay support HPOS? =
 
 Yes. The plugin declares compatibility with WooCommerce High-Performance Order Storage and uses WooCommerce order APIs.
 
@@ -89,27 +89,31 @@ The free plugin shares a compatibility profile only after an administrator expli
 
 == External services ==
 
-Renewly can optionally connect to a Web Ninja LLC service at `https://www.webninjallc.com/wp-json/wnlm/v1/site-profile`. This connection is disabled by default and is not required for any subscription feature.
+RepeatPay can optionally connect to a Web Ninja LLC service at `https://www.webninjallc.com/wp-json/wnlm/v1/site-profile`. This connection is disabled by default and is not required for any subscription feature.
 
 When an administrator explicitly opts in, the plugin sends the website URL and name, administrator email address, WordPress and PHP versions, active theme name, locale, environment type, multisite status, plugin version, and a random installation identifier. The service uses this compatibility profile to improve updates, compatibility, and support. It is sent when consent is enabled, after this plugin is updated, and weekly while consent remains enabled.
 
 When consent is disabled, the plugin sends the website URL and installation identifier with consent set to false so the stored profile can be erased. It then removes the local installation identifier and stops scheduled sharing. Orders, customer records, payment details, and subscription records are never sent.
 
-Service and privacy information: https://www.webninjallc.com/plugins/renewly/
+Service and privacy information: https://www.webninjallc.com/plugins/repeatpay/
 
 == Development ==
 
-Public development repository: https://github.com/webifya/Renewly-Subscriptions-for-WooCommerce
+Public development repository: https://github.com/webifya/RepeatPay-Subscriptions-for-WooCommerce
 
 The distributed PHP is the human-readable source. The plugin has no compiled, minified, or externally loaded executable code and requires no build process.
 
 == Changelog ==
 
+= 0.6.1 =
+* Rebranded the plugin, source identifiers, documentation, links, and WordPress.org metadata as RepeatPay Subscriptions for WooCommerce.
+* Added a legacy-copy activation guard so an older development build cannot run beside RepeatPay.
+
 = 0.6.0 =
-* Rebranded the plugin as Renewly Subscriptions for WooCommerce and adopted the requested WordPress.org slug.
-* Replaced collision-prone legacy identifiers with Renewly-specific prefixes.
+* Prepared the plugin for its WordPress.org naming review.
+* Replaced collision-prone identifiers with plugin-specific prefixes.
 * Moved product-admin JavaScript and upgrade-page CSS to WordPress enqueue APIs.
-* Limited the optional review request to Renewly-related administration screens.
+* Limited the optional review request to RepeatPay-related administration screens.
 
 = 0.5.9 =
 * Added global subscription price prefix and suffix settings with per-product overrides.
@@ -123,7 +127,7 @@ The distributed PHP is the human-readable source. The plugin has no compiled, mi
 * Prepared the plugin for WordPress.org review with transparent external-service code and documentation.
 * Added suggested privacy-policy text for local subscription records and optional compatibility-profile sharing.
 * Added explicit product-save authorization checks and aligned the translation domain with the expected directory slug.
-* Clarified that Renewly PRO is a separately distributed add-on and that no premium implementation is locked in the free plugin.
+* Clarified that RepeatPay PRO is a separately distributed add-on and that no premium implementation is locked in the free plugin.
 
 = 0.5.6 =
 * Added optional per-product prefix and suffix text for subscription price displays.
@@ -132,7 +136,7 @@ The distributed PHP is the human-readable source. The plugin has no compiled, mi
 * Simplified plugin-row metadata by retaining Documentation and removing duplicate FAQ and Plugin details links.
 
 = 0.5.4 =
-* Routed all Free-edition PRO promotions through the Renewly sales page.
+* Routed all Free-edition PRO promotions through the RepeatPay sales page.
 
 = 0.5.3 =
 * Simplified the optional site-profile sharing message for clearer update and compatibility guidance.
@@ -149,8 +153,8 @@ The distributed PHP is the human-readable source. The plugin has no compiled, mi
 * Improved the description, FAQ, documentation, and details metadata.
 
 = 0.5.0 =
-* Rebranded the public plugin as Renewly Subscriptions for WooCommerce.
+* Updated the public plugin identity in preparation for directory submission.
 * Updated plugin metadata, administration copy, documentation, and translation domain.
-* Preserved all existing `renewly_` subscription records, hooks, schedules, and product types for seamless upgrades.
+* Preserved subscription records, hooks, schedules, and product types during the development rename.
 
 Earlier release history is available in the public development repository.

@@ -2,13 +2,13 @@
 /**
  * Subscription settings.
  *
- * @package Renewly_Subscriptions
+ * @package RepeatPay_Subscriptions
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class RENEWLY_Settings {
-	const OPTION = 'renewly_dunning_settings';
+class REPEATPAY_Settings {
+	const OPTION = 'repeatpay_dunning_settings';
 
 	/**
 	 * Set up hooks.
@@ -24,10 +24,10 @@ class RENEWLY_Settings {
 	public static function menu() {
 		add_submenu_page(
 			'woocommerce',
-			__( 'Subscription settings', 'renewly-subscriptions-for-woocommerce' ),
-			__( 'Subscription settings', 'renewly-subscriptions-for-woocommerce' ),
+			__( 'Subscription settings', 'repeatpay-subscriptions-for-woocommerce' ),
+			__( 'Subscription settings', 'repeatpay-subscriptions-for-woocommerce' ),
 			'manage_woocommerce',
-			'renewly-settings',
+			'repeatpay-settings',
 			array( __CLASS__, 'page' )
 		);
 	}
@@ -37,7 +37,7 @@ class RENEWLY_Settings {
 	 */
 	public static function register() {
 		register_setting(
-			'renewly_settings',
+			'repeatpay_settings',
 			self::OPTION,
 			array(
 				'type'              => 'array',
@@ -47,69 +47,69 @@ class RENEWLY_Settings {
 		);
 
 		add_settings_section(
-			'renewly_dunning',
-			__( 'Failed-payment recovery', 'renewly-subscriptions-for-woocommerce' ),
+			'repeatpay_dunning',
+			__( 'Failed-payment recovery', 'repeatpay-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'section' ),
-			'renewly-settings'
+			'repeatpay-settings'
 		);
 
 		add_settings_field(
 			'retry_days',
-			__( 'Days between reminders', 'renewly-subscriptions-for-woocommerce' ),
+			__( 'Days between reminders', 'repeatpay-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'number_field' ),
-			'renewly-settings',
-			'renewly_dunning',
+			'repeatpay-settings',
+			'repeatpay_dunning',
 			array( 'key' => 'retry_days', 'min' => 1, 'max' => 30 )
 		);
 
 		add_settings_section(
-			'renewly_privacy',
-			__( 'Site profile and privacy', 'renewly-subscriptions-for-woocommerce' ),
+			'repeatpay_privacy',
+			__( 'Site profile and privacy', 'repeatpay-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'privacy_section' ),
-			'renewly-settings'
+			'repeatpay-settings'
 		);
 		add_settings_field(
 			'share_site_profile',
-			__( 'Share site profile', 'renewly-subscriptions-for-woocommerce' ),
+			__( 'Share site profile', 'repeatpay-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'profile_consent_field' ),
-			'renewly-settings',
-			'renewly_privacy'
+			'repeatpay-settings',
+			'repeatpay_privacy'
 		);
 		add_settings_field(
 			'max_retries',
-			__( 'Maximum reminders', 'renewly-subscriptions-for-woocommerce' ),
+			__( 'Maximum reminders', 'repeatpay-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'number_field' ),
-			'renewly-settings',
-			'renewly_dunning',
+			'repeatpay-settings',
+			'repeatpay_dunning',
 			array( 'key' => 'max_retries', 'min' => 1, 'max' => 10 )
 		);
 
 		add_settings_section(
-			'renewly_price_display',
-			__( 'Subscription price display', 'renewly-subscriptions-for-woocommerce' ),
+			'repeatpay_price_display',
+			__( 'Subscription price display', 'repeatpay-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'price_display_section' ),
-			'renewly-settings'
+			'repeatpay-settings'
 		);
 		add_settings_field(
 			'price_prefix',
-			__( 'Default price prefix', 'renewly-subscriptions-for-woocommerce' ),
+			__( 'Default price prefix', 'repeatpay-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'text_field' ),
-			'renewly-settings',
-			'renewly_price_display',
+			'repeatpay-settings',
+			'repeatpay_price_display',
 			array(
 				'key'         => 'price_prefix',
-				'placeholder' => __( 'Starting from', 'renewly-subscriptions-for-woocommerce' ),
+				'placeholder' => __( 'Starting from', 'repeatpay-subscriptions-for-woocommerce' ),
 			)
 		);
 		add_settings_field(
 			'price_suffix',
-			__( 'Default price suffix', 'renewly-subscriptions-for-woocommerce' ),
+			__( 'Default price suffix', 'repeatpay-subscriptions-for-woocommerce' ),
 			array( __CLASS__, 'text_field' ),
-			'renewly-settings',
-			'renewly_price_display',
+			'repeatpay-settings',
+			'repeatpay_price_display',
 			array(
 				'key'         => 'price_suffix',
-				'placeholder' => __( 'until your birthday', 'renewly-subscriptions-for-woocommerce' ),
+				'placeholder' => __( 'until your birthday', 'repeatpay-subscriptions-for-woocommerce' ),
 			)
 		);
 	}
@@ -164,17 +164,17 @@ class RENEWLY_Settings {
 	 * Settings introduction.
 	 */
 	public static function section() {
-		echo '<p>' . esc_html__( 'Unpaid renewal orders are reminded automatically. After the final attempt, the subscription is placed on hold until the order is paid.', 'renewly-subscriptions-for-woocommerce' ) . '</p>';
+		echo '<p>' . esc_html__( 'Unpaid renewal orders are reminded automatically. After the final attempt, the subscription is placed on hold until the order is paid.', 'repeatpay-subscriptions-for-woocommerce' ) . '</p>';
 	}
 
 	/** Explain the optional profile collection. */
 	public static function privacy_section() {
-		echo '<p>' . esc_html__( 'Help Web Ninja LLC understand compatibility and provide support. Nothing is shared unless you opt in, and disabling the option requests deletion of the stored profile.', 'renewly-subscriptions-for-woocommerce' ) . '</p>';
+		echo '<p>' . esc_html__( 'Help Web Ninja LLC understand compatibility and provide support. Nothing is shared unless you opt in, and disabling the option requests deletion of the stored profile.', 'repeatpay-subscriptions-for-woocommerce' ) . '</p>';
 	}
 
 	/** Explain global subscription price wording. */
 	public static function price_display_section() {
-		echo '<p>' . esc_html__( 'Set optional text for all subscription prices. A product-specific prefix or suffix overrides the corresponding global value.', 'renewly-subscriptions-for-woocommerce' ) . '</p>';
+		echo '<p>' . esc_html__( 'Set optional text for all subscription prices. A product-specific prefix or suffix overrides the corresponding global value.', 'repeatpay-subscriptions-for-woocommerce' ) . '</p>';
 	}
 
 	/** Render explicit site-profile consent. */
@@ -183,7 +183,7 @@ class RENEWLY_Settings {
 			'<label><input type="checkbox" name="%1$s[share_site_profile]" value="1" %2$s /> %3$s</label>',
 			esc_attr( self::OPTION ),
 			checked( self::get( 'share_site_profile' ), 1, false ),
-			esc_html__( 'Allow Renewly to share this website profile to receive regular updates and compatibility support.', 'renewly-subscriptions-for-woocommerce' )
+			esc_html__( 'Allow RepeatPay to share this website profile to receive regular updates and compatibility support.', 'repeatpay-subscriptions-for-woocommerce' )
 		);
 	}
 
@@ -227,11 +227,11 @@ class RENEWLY_Settings {
 		}
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Renewly Subscriptions for WooCommerce settings', 'renewly-subscriptions-for-woocommerce' ); ?></h1>
+			<h1><?php esc_html_e( 'RepeatPay Subscriptions for WooCommerce settings', 'repeatpay-subscriptions-for-woocommerce' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php
-				settings_fields( 'renewly_settings' );
-				do_settings_sections( 'renewly-settings' );
+				settings_fields( 'repeatpay_settings' );
+				do_settings_sections( 'repeatpay-settings' );
 				submit_button();
 				?>
 			</form>
