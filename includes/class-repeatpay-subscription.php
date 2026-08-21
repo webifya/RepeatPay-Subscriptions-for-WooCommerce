@@ -2,13 +2,13 @@
 /**
  * Subscription records.
  *
- * @package Renewly_Subscriptions
+ * @package RepeatPay_Subscriptions
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class RENEWLY_Subscription {
-	const POST_TYPE = 'renewly_subscription';
+class REPEATPAY_Subscription {
+	const POST_TYPE = 'repeatpay_subscription';
 
 	/**
 	 * Set up hooks.
@@ -34,9 +34,9 @@ class RENEWLY_Subscription {
 			return;
 		}
 
-		$renewal_subscription_id = absint( $order->get_meta( '_renewly_subscription_id' ) );
-		if ( $order->get_meta( '_renewly_is_renewal' ) && $renewal_subscription_id ) {
-			if ( 'cancelled' !== get_post_meta( $renewal_subscription_id, '_renewly_status', true ) ) {
+		$renewal_subscription_id = absint( $order->get_meta( '_repeatpay_subscription_id' ) );
+		if ( $order->get_meta( '_repeatpay_is_renewal' ) && $renewal_subscription_id ) {
+			if ( 'cancelled' !== get_post_meta( $renewal_subscription_id, '_repeatpay_status', true ) ) {
 				self::set_status( $renewal_subscription_id, 'on-hold', 'renewal-reversed' );
 			}
 			return;
@@ -47,7 +47,7 @@ class RENEWLY_Subscription {
 				'post_type'      => self::POST_TYPE,
 				'post_status'    => 'publish',
 				'posts_per_page' => 100,
-				'meta_key'       => '_renewly_parent_order_id',
+				'meta_key'       => '_repeatpay_parent_order_id',
 				'meta_value'     => absint( $order_id ),
 				'fields'         => 'ids',
 			)
@@ -65,8 +65,8 @@ class RENEWLY_Subscription {
 			self::POST_TYPE,
 			array(
 				'labels' => array(
-					'name'          => __( 'Subscriptions', 'renewly-subscriptions-for-woocommerce' ),
-					'singular_name' => __( 'Subscription', 'renewly-subscriptions-for-woocommerce' ),
+					'name'          => __( 'Subscriptions', 'repeatpay-subscriptions-for-woocommerce' ),
+					'singular_name' => __( 'Subscription', 'repeatpay-subscriptions-for-woocommerce' ),
 				),
 				'public'              => false,
 				'show_ui'             => true,
@@ -86,28 +86,28 @@ class RENEWLY_Subscription {
 	 */
 	public static function create_from_order( $order_id ) {
 		$order = wc_get_order( $order_id );
-		if ( ! $order || $order->get_meta( '_renewly_subscriptions_created' ) ) {
+		if ( ! $order || $order->get_meta( '_repeatpay_subscriptions_created' ) ) {
 			return;
 		}
 
 		$created = false;
 		foreach ( $order->get_items() as $item ) {
 			$product = $item->get_product();
-			if ( ! $product || 'renewly_subscription' !== $product->get_type() ) {
+			if ( ! $product || 'repeatpay_subscription' !== $product->get_type() ) {
 				continue;
 			}
 
-			$interval = max( 1, absint( $product->get_meta( '_renewly_interval' ) ) );
-			$period   = sanitize_key( $product->get_meta( '_renewly_period' ) ?: 'month' );
-			$trial    = absint( $product->get_meta( '_renewly_trial_days' ) );
-			$limit    = absint( $product->get_meta( '_renewly_renewal_limit' ) );
+			$interval = max( 1, absint( $product->get_meta( '_repeatpay_interval' ) ) );
+			$period   = sanitize_key( $product->get_meta( '_repeatpay_period' ) ?: 'month' );
+			$trial    = absint( $product->get_meta( '_repeatpay_trial_days' ) );
+			$limit    = absint( $product->get_meta( '_repeatpay_renewal_limit' ) );
 			$next     = $trial ? time() + ( DAY_IN_SECONDS * $trial ) : self::next_timestamp( time(), $interval, $period );
 			$status   = $trial ? 'trialling' : 'active';
 			$post_id  = wp_insert_post(
 				array(
 					'post_type'   => self::POST_TYPE,
 					'post_status' => 'publish',
-					'post_title'  => sprintf( __( 'Subscription for order #%s', 'renewly-subscriptions-for-woocommerce' ), $order->get_order_number() ),
+					'post_title'  => sprintf( __( 'Subscription for order #%s', 'repeatpay-subscriptions-for-woocommerce' ), $order->get_order_number() ),
 					'post_author' => (int) $order->get_customer_id(),
 				)
 			);
@@ -116,33 +116,33 @@ class RENEWLY_Subscription {
 				continue;
 			}
 
-			$recurring_price = $item->get_meta( '_renewly_recurring_price', true );
+			$recurring_price = $item->get_meta( '_repeatpay_recurring_price', true );
 			if ( '' === $recurring_price ) {
 				$recurring_price = (float) $product->get_price();
 			}
 
 			self::set_status( $post_id, $status, 'created' );
-			update_post_meta( $post_id, '_renewly_parent_order_id', $order->get_id() );
-			update_post_meta( $post_id, '_renewly_customer_id', $order->get_customer_id() );
-			update_post_meta( $post_id, '_renewly_product_id', $product->get_id() );
-			update_post_meta( $post_id, '_renewly_quantity', $item->get_quantity() );
-			update_post_meta( $post_id, '_renewly_recurring_price', wc_format_decimal( $recurring_price ) );
-			update_post_meta( $post_id, '_renewly_currency', $order->get_currency() );
-			update_post_meta( $post_id, '_renewly_interval', $interval );
-			update_post_meta( $post_id, '_renewly_period', $period );
-			update_post_meta( $post_id, '_renewly_next_payment', $next );
-			update_post_meta( $post_id, '_renewly_trial_end', $trial ? $next : 0 );
-			update_post_meta( $post_id, '_renewly_renewal_limit', $limit );
-			update_post_meta( $post_id, '_renewly_completed_renewals', 0 );
-			update_post_meta( $post_id, '_renewly_payment_method', $order->get_payment_method() );
+			update_post_meta( $post_id, '_repeatpay_parent_order_id', $order->get_id() );
+			update_post_meta( $post_id, '_repeatpay_customer_id', $order->get_customer_id() );
+			update_post_meta( $post_id, '_repeatpay_product_id', $product->get_id() );
+			update_post_meta( $post_id, '_repeatpay_quantity', $item->get_quantity() );
+			update_post_meta( $post_id, '_repeatpay_recurring_price', wc_format_decimal( $recurring_price ) );
+			update_post_meta( $post_id, '_repeatpay_currency', $order->get_currency() );
+			update_post_meta( $post_id, '_repeatpay_interval', $interval );
+			update_post_meta( $post_id, '_repeatpay_period', $period );
+			update_post_meta( $post_id, '_repeatpay_next_payment', $next );
+			update_post_meta( $post_id, '_repeatpay_trial_end', $trial ? $next : 0 );
+			update_post_meta( $post_id, '_repeatpay_renewal_limit', $limit );
+			update_post_meta( $post_id, '_repeatpay_completed_renewals', 0 );
+			update_post_meta( $post_id, '_repeatpay_payment_method', $order->get_payment_method() );
 
-			RENEWLY_Renewals::schedule( $post_id, $next );
-			do_action( 'renewly_subscription_created', $post_id, $order, $item );
+			REPEATPAY_Renewals::schedule( $post_id, $next );
+			do_action( 'repeatpay_subscription_created', $post_id, $order, $item );
 			$created = true;
 		}
 
 		if ( $created ) {
-			$order->update_meta_data( '_renewly_subscriptions_created', 1 );
+			$order->update_meta_data( '_repeatpay_subscriptions_created', 1 );
 			$order->save();
 		}
 	}
@@ -161,10 +161,10 @@ class RENEWLY_Subscription {
 			return;
 		}
 
-		$old_status = get_post_meta( $subscription_id, '_renewly_status', true );
-		update_post_meta( $subscription_id, '_renewly_status', $status );
+		$old_status = get_post_meta( $subscription_id, '_repeatpay_status', true );
+		update_post_meta( $subscription_id, '_repeatpay_status', $status );
 		if ( $old_status !== $status ) {
-			do_action( 'renewly_subscription_status_updated', absint( $subscription_id ), $status, $old_status, sanitize_key( $context ) );
+			do_action( 'repeatpay_subscription_status_updated', absint( $subscription_id ), $status, $old_status, sanitize_key( $context ) );
 		}
 	}
 
@@ -191,10 +191,10 @@ class RENEWLY_Subscription {
 	public static function columns() {
 		return array(
 			'cb'       => '<input type="checkbox" />',
-			'title'    => __( 'Subscription', 'renewly-subscriptions-for-woocommerce' ),
-			'status'   => __( 'Status', 'renewly-subscriptions-for-woocommerce' ),
-			'customer' => __( 'Customer', 'renewly-subscriptions-for-woocommerce' ),
-			'next'     => __( 'Next payment', 'renewly-subscriptions-for-woocommerce' ),
+			'title'    => __( 'Subscription', 'repeatpay-subscriptions-for-woocommerce' ),
+			'status'   => __( 'Status', 'repeatpay-subscriptions-for-woocommerce' ),
+			'customer' => __( 'Customer', 'repeatpay-subscriptions-for-woocommerce' ),
+			'next'     => __( 'Next payment', 'repeatpay-subscriptions-for-woocommerce' ),
 		);
 	}
 
@@ -206,12 +206,12 @@ class RENEWLY_Subscription {
 	 */
 	public static function column_content( $column, $post_id ) {
 		if ( 'status' === $column ) {
-			echo esc_html( ucwords( str_replace( '-', ' ', get_post_meta( $post_id, '_renewly_status', true ) ) ) );
+			echo esc_html( ucwords( str_replace( '-', ' ', get_post_meta( $post_id, '_repeatpay_status', true ) ) ) );
 		} elseif ( 'customer' === $column ) {
-			$customer = get_userdata( (int) get_post_meta( $post_id, '_renewly_customer_id', true ) );
+			$customer = get_userdata( (int) get_post_meta( $post_id, '_repeatpay_customer_id', true ) );
 			echo esc_html( $customer ? $customer->display_name : '—' );
 		} elseif ( 'next' === $column ) {
-			$next = (int) get_post_meta( $post_id, '_renewly_next_payment', true );
+			$next = (int) get_post_meta( $post_id, '_repeatpay_next_payment', true );
 			echo esc_html( $next ? wp_date( wc_date_format(), $next ) : '—' );
 		}
 	}
