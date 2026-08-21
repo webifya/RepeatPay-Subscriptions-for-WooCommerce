@@ -2,9 +2,9 @@
 Contributors: mahfuzar
 Tags: woocommerce, subscriptions, recurring payments, subscription products, renewal orders
 Requires at least: 6.4
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.6.1
+Stable tag: 0.6.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,9 @@ Public development repository: https://github.com/webifya/RepeatPay-Subscription
 The distributed PHP is the human-readable source. The plugin has no compiled, minified, or externally loaded executable code and requires no build process.
 
 == Changelog ==
+
+= 0.6.2 =
+* Updated the documented WordPress compatibility to 7.1 for directory submission.
 
 = 0.6.1 =
 * Rebranded the plugin, source identifiers, documentation, links, and WordPress.org metadata as RepeatPay Subscriptions for WooCommerce.
