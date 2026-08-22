@@ -8,8 +8,8 @@
 defined( 'ABSPATH' ) || exit;
 
 class REPEATPAY_Upgrade {
-	const PROMO_URL   = 'https://webninjallc.com/plugins/repeatpay/';
-	const DETAILS_URL = 'https://webninjallc.com/plugins/repeatpay/';
+	const PROMO_URL   = 'https://github.com/webifya/RepeatPay-Subscriptions-for-WooCommerce/blob/main/readme.txt';
+	const DETAILS_URL = 'https://github.com/webifya/RepeatPay-Subscriptions-for-WooCommerce';
 
 	/**
 	 * Register upgrade entry points.
@@ -71,7 +71,7 @@ class REPEATPAY_Upgrade {
 		if ( plugin_basename( REPEATPAY_PLUGIN_FILE ) !== $file ) {
 			return $links;
 		}
-		$links[] = '<a href="' . esc_url( self::DETAILS_URL . 'documentation/' ) . '" target="_blank" rel="noopener">' . esc_html__( 'Documentation', 'repeatpay-subscriptions-for-woocommerce' ) . '</a>';
+		$links[] = '<a href="' . esc_url( self::DETAILS_URL ) . '" target="_blank" rel="noopener">' . esc_html__( 'Documentation', 'repeatpay-subscriptions-for-woocommerce' ) . '</a>';
 		return $links;
 	}
 
@@ -93,7 +93,7 @@ class REPEATPAY_Upgrade {
 					<small><?php esc_html_e( 'billed annually', 'repeatpay-subscriptions-for-woocommerce' ); ?></small>
 				</div>
 				<a class="repeatpay-upgrade-button" href="<?php echo esc_url( self::PROMO_URL ); ?>" target="_blank" rel="noopener sponsored">
-					<?php esc_html_e( 'Get RepeatPay PRO', 'repeatpay-subscriptions-for-woocommerce' ); ?>
+					<?php esc_html_e( 'Learn about RepeatPay PRO', 'repeatpay-subscriptions-for-woocommerce' ); ?>
 				</a>
 			</section>
 
