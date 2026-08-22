@@ -156,7 +156,7 @@ class REPEATPAY_Site_Profile {
 		$content = sprintf(
 			/* translators: %s: URL to RepeatPay service and privacy information. */
 			__( 'RepeatPay stores subscription records in this website’s WordPress database and associates them with WooCommerce customers and orders so recurring invoices can be created and managed. These records remain on the website unless the site owner removes them. If an administrator explicitly enables compatibility-profile sharing, the website sends its URL and name, administrator email address, WordPress and PHP versions, active theme name, locale, environment type, multisite status, plugin version, and a random installation identifier to Web Ninja LLC. The profile is refreshed weekly while consent remains enabled. Disabling the setting sends an erasure request and stops future sharing. RepeatPay does not send orders, customer records, payment details, or subscription records to this service. Service and privacy information is available at <a href="%s">Web Ninja LLC</a>.', 'repeatpay-subscriptions-for-woocommerce' ),
-			esc_url( 'https://www.webninjallc.com/plugins/repeatpay/' )
+			esc_url( 'https://github.com/webifya/RepeatPay-Subscriptions-for-WooCommerce' )
 		);
 
 		wp_add_privacy_policy_content(
