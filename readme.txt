@@ -4,7 +4,7 @@ Tags: woocommerce, subscriptions, recurring payments, subscription products, ren
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.6.2
+Stable tag: 0.6.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,7 +43,7 @@ Features:
 
 The separately distributed RepeatPay PRO add-on provides automatic supported-gateway renewals, retry handling with invoice fallback, customer pause and resume, early renewal, advanced administration, and protected subscriber downloads with limits and expiry. No PRO implementation is included or locked inside this free plugin.
 
-RepeatPay PRO is currently $69.99 per year. Learn more at https://webninjallc.com/plugins/repeatpay/
+RepeatPay PRO is currently $69.99 per year. Learn more at https://github.com/webifya/RepeatPay-Subscriptions-for-WooCommerce/blob/main/readme.txt
 
 == Installation ==
 
@@ -95,7 +95,7 @@ When an administrator explicitly opts in, the plugin sends the website URL and n
 
 When consent is disabled, the plugin sends the website URL and installation identifier with consent set to false so the stored profile can be erased. It then removes the local installation identifier and stops scheduled sharing. Orders, customer records, payment details, and subscription records are never sent.
 
-Service and privacy information: https://www.webninjallc.com/plugins/repeatpay/
+Service and privacy information: https://github.com/webifya/RepeatPay-Subscriptions-for-WooCommerce
 
 == Development ==
 
@@ -104,6 +104,9 @@ Public development repository: https://github.com/webifya/RepeatPay-Subscription
 The distributed PHP is the human-readable source. The plugin has no compiled, minified, or externally loaded executable code and requires no build process.
 
 == Changelog ==
+
+= 0.6.3 =
+* Replaced unavailable product, documentation, and service-information URLs with verified public project pages.
 
 = 0.6.2 =
 * Updated the documented WordPress compatibility to 7.1 for directory submission.
