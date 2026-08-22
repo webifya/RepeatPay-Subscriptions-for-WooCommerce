@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: RepeatPay Subscriptions for WooCommerce
- * Plugin URI: https://www.webninjallc.com/plugins/repeatpay/
+ * Plugin URI: https://github.com/webifya/RepeatPay-Subscriptions-for-WooCommerce
  * Description: Create flexible WooCommerce subscriptions with renewal scheduling, payment recovery, trials, sign-up fees, and gateway-neutral invoices.
- * Version: 0.6.2
+ * Version: 0.6.3
  * Author: Mahfuzar Rahman
  * Author URI: https://profiles.wordpress.org/mahfuzar/
  * License: GPLv2 or later
@@ -33,7 +33,7 @@ if ( defined( 'REPEATPAY_PLUGIN_FILE' ) || defined( 'RENEWLY_PLUGIN_FILE' ) || d
 	return;
 }
 
-define( 'REPEATPAY_VERSION', '0.6.2' );
+define( 'REPEATPAY_VERSION', '0.6.3' );
 define( 'REPEATPAY_PLUGIN_FILE', __FILE__ );
 define( 'REPEATPAY_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
