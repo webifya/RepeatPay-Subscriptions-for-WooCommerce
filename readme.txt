@@ -4,7 +4,7 @@ Tags: woocommerce, subscriptions, recurring payments, subscription products, ren
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.6.3
+Stable tag: 0.6.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,9 @@ Public development repository: https://github.com/webifya/RepeatPay-Subscription
 The distributed PHP is the human-readable source. The plugin has no compiled, minified, or externally loaded executable code and requires no build process.
 
 == Changelog ==
+
+= 0.6.4 =
+* Added an automated GitHub release workflow for deploying plugin files and directory assets to WordPress.org.
 
 = 0.6.3 =
 * Replaced unavailable product, documentation, and service-information URLs with verified public project pages.
