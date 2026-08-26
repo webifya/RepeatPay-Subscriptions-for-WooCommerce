@@ -1,0 +1,63 @@
+name: Deploy release to WordPress.org
+
+on:
+  release:
+    types: [released]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wordpress-org-release
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to WordPress.org SVN
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out the release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+
+      - name: Verify release version metadata
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+
+          version="${RELEASE_TAG#v}"
+          plugin_version="$(sed -n 's/^ \* Version: \([0-9][0-9.]*\)$/\1/p' repeatpay-subscriptions-for-woocommerce.php | head -n 1)"
+          stable_tag="$(sed -n 's/^Stable tag: \([0-9][0-9.]*\)$/\1/p' readme.txt | head -n 1)"
+
+          if [[ -z "$plugin_version" || -z "$stable_tag" ]]; then
+            echo "Could not read the plugin version or readme stable tag."
+            exit 1
+          fi
+
+          if [[ "$version" != "$plugin_version" || "$version" != "$stable_tag" ]]; then
+            echo "Release tag ($version), plugin version ($plugin_version), and stable tag ($stable_tag) must match."
+            exit 1
+          fi
+
+      - name: Deploy plugin and assets
+        id: deploy
+        uses: 10up/action-wordpress-plugin-deploy@2.3.0
+        with:
+          generate-zip: true
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: repeatpay-subscriptions-for-woocommerce
+          ASSETS_DIR: assets
+
+      - name: Attach installable ZIP to the GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.deploy.outputs.zip-path }}
+
